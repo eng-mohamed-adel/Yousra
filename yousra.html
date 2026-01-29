@@ -7,13 +7,13 @@
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* --- تعديلات الألوان (تم تغيير الأصفر للأزرق السماوي) --- */
+        /* --- الألوان --- */
         :root {
-            --primary-color: #003366; /* كحلي */
-            --secondary-color: #0ea5e9; /* أزرق سماوي بدلاً من الأصفر */
+            --primary-color: #003366;
+            --secondary-color: #0ea5e9;
             --header-bg: rgba(15, 23, 42, 0.98);
             --mobile-menu-bg: #0f172a;
-            --active-item-bg: rgba(14, 165, 233, 0.2); /* خلفية العنصر النشط */
+            --active-item-bg: rgba(14, 165, 233, 0.15);
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -47,7 +47,7 @@
         .brand-text h1 { margin: 0; font-size: 1.2rem; font-weight: 800; line-height: 1.1; }
         .brand-text small { font-size: 0.75rem; color: var(--secondary-color); display: block; margin-top: 2px; }
 
-        /* البحث والروابط (سطح المكتب) */
+        /* البحث والروابط */
         .desktop-search-wrapper { flex: 1; max-width: 400px; margin: 0 30px; position: relative; display: none; }
         .header-search-bar {
             background: rgba(255,255,255,0.1); border-radius: 50px; padding: 8px 20px;
@@ -104,7 +104,7 @@
         }
         .dept-icon-box { width: 55px; height: 55px; background: rgba(0, 51, 102, 0.1); border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.6rem; color: var(--primary-color); }
 
-        /* --- المشغل التفاعلي --- */
+        /* المشغل */
         .viewer-container { display: flex; flex-direction: column; gap: 20px; }
         .video-wrapper { position: relative; padding-bottom: 56.25%; background: black; border-radius: 16px; overflow: hidden; width: 100%; }
         .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
@@ -116,14 +116,7 @@
             border-left: 3px solid transparent;
         }
         .playlist-item:hover { background: rgba(255,255,255,0.1); }
-        
-        /* التنسيق الجديد للعنصر النشط */
-        .playlist-item.active {
-            background: var(--active-item-bg);
-            border-left: 3px solid var(--secondary-color);
-            color: var(--secondary-color);
-            font-weight: bold;
-        }
+        .playlist-item.active { background: var(--active-item-bg); border-left: 3px solid var(--secondary-color); color: var(--secondary-color); font-weight: bold; }
         .playlist-item.active i { color: var(--secondary-color); }
 
         .about-card { background: white; border-radius: 20px; padding: 40px; text-align: center; margin-top: 30px; }
@@ -200,7 +193,8 @@
         <div class="general-grid" id="generalGrid"></div>
 
         <div class="section-header" style="margin-top: 50px;"><i class="fas fa-university"></i><h2>الأقسام التخصصية</h2></div>
-        <div class="dept-grid-desktop" id="deptGrid"></div> <br><br>
+        <div class="dept-grid-desktop" id="deptGrid"></div>
+        <br><br>
     </div>
 
     <div id="deptView" class="container hidden">
@@ -211,7 +205,6 @@
 
     <div id="playerView" class="container hidden">
         <button onclick="goBack()" class="btn" style="color: white; margin-bottom: 15px;"><i class="fas fa-chevron-right"></i> رجوع</button>
-        
         <div class="viewer-container">
             <div class="viewer-content">
                 <div class="video-wrapper">
@@ -222,7 +215,6 @@
                     <p id="lessonDesc" style="color: #666; margin-top: 10px;">الوصف</p>
                 </div>
             </div>
-            
             <div class="playlist-wrapper">
                 <h3 style="color: white; margin-top:0; padding-bottom:10px; border-bottom:1px solid rgba(255,255,255,0.1);">قائمة الحلقات</h3>
                 <div id="playlistContainer"></div>
@@ -235,12 +227,12 @@
         <div class="about-card">
             <img src="https://cdn-icons-png.flaticon.com/512/2231/2231648.png" width="100">
             <h1 style="color: var(--primary-color);">كلية المحاسبة غريان</h1>
-            <p style="color: #555;">منصة تعليمية متكاملة لطلابنا الأعزاء.</p>
+            <p style="color: #555;">منصة تعليمية متكاملة.</p>
         </div>
     </div>
 
     <script>
-        // --- البيانات (بدون روابط فيديو حقيقية) ---
+        // --- البيانات ---
         const generalSubjects = [
             { id: 'g1', title: 'لغة عربية', icon: 'fa-language' },
             { id: 'g2', title: 'دراسات اسلامية', icon: 'fa-quran' },
@@ -263,21 +255,64 @@
         ];
 
         const departments = [
-            { id: 'd1', name: 'قسم المحاسبة', icon: 'fa-calculator', courses: [{title: 'محاسبة شركات', desc: 'أساسيات'}] },
-            { id: 'd2', name: 'قسم تحليل بيانات', icon: 'fa-database', courses: [{title: 'تحليل مالي', desc: 'متقدم'}] },
+            { 
+                id: 'd1', name: 'قسم المحاسبة', icon: 'fa-calculator',
+                courses: [
+                    { title: 'المحاسبة المتوسطة 1', desc: 'الأصول الثابتة والمتداولة' },
+                    { title: 'المحاسبة المتوسطة 2', desc: 'الالتزامات وحقوق الملكية' },
+                    { title: 'محاسبة الشركات 1', desc: 'شركات الأشخاص' },
+                    { title: 'محاسبة الشركات 2', desc: 'شركات الأموال' },
+                    { title: 'محاسبة المشروعات الزراعية والجمعيات التعاونية', desc: 'تطبيقات محاسبية' },
+                    { title: 'محاسبة التكاليف 1', desc: 'عناصر التكاليف' },
+                    { title: 'المحاسبة الضريبية', desc: 'التشريعات الضريبية' },
+                    { title: 'محاسبة النفط', desc: 'التكاليف في صناعة النفط' },
+                    { title: 'محاسبة المشروعات الخدمية', desc: 'قطاع الخدمات' },
+                    { title: 'تحليل القوائم المالية', desc: 'النسب والمؤشرات' },
+                    { title: 'محاسبة الأموال العامة', desc: 'الوحدات الحكومية' },
+                    { title: 'محاسبة المصارف وشركات التأمين', desc: 'العمليات المصرفية' },
+                    { title: 'مراجعة الحسابات 1', desc: 'أساسيات التدقيق' },
+                    { title: 'مراجعة الحسابات 2', desc: 'إجراءات المراجعة' },
+                    { title: 'محاسبة الأقسام والفروع', desc: 'الفروع المستقلة وغير المستقلة' },
+                    { title: 'نظم المعلومات المحاسبية', desc: 'تصميم النظم' },
+                    { title: 'المحاسبة الإدارية', desc: 'دور المحاسب في القرار' },
+                    { title: 'قانون تجاري', desc: 'العقود والأوراق التجارية' },
+                    { title: 'اقتصاد جزئي', desc: 'تحليل سلوك المستهلك' },
+                    { title: 'علوم سلوكية', desc: 'سلوك الأفراد والجماعات' },
+                    { title: 'إدارة الموارد البشرية', desc: 'الاستقطاب والاختيار' }
+                ]
+            },
+            { 
+                id: 'd2', name: 'قسم تحليل بيانات', icon: 'fa-database', 
+                courses: [
+                    { title: 'أساسيات البرمجة', desc: 'Introduction to Programming' },
+                    { title: 'رياضيات منفصلة', desc: 'Discrete Math' },
+                    { title: 'تركيب بيانات 1', desc: 'Data Structures I' },
+                    { title: 'لغة السي', desc: 'C Programming' },
+                    { title: 'نظام التشغيل', desc: 'Operating Systems' },
+                    { title: 'تطبيقات الحاسب', desc: 'Computer Apps' },
+                    { title: 'برمجة المواقع', desc: 'Web Development' },
+                    { title: 'إدارة مشاريع نظم ومعلومات', desc: 'Project Management' },
+                    { title: 'إحصاء رياضي', desc: 'Math Statistics' },
+                    { title: 'تركيب بيانات 2', desc: 'Data Structures II' },
+                    { title: 'إحصاء تطبيقي', desc: 'Applied Statistics' },
+                    { title: 'تحليل الانحدار', desc: 'Regression Analysis' },
+                    { title: 'السلاسل الزمنية', desc: 'Time Series' },
+                    { title: 'قواعد البيانات', desc: 'Database Systems' },
+                    { title: 'برمجة قواعد البيانات', desc: 'DB Programming' },
+                    { title: 'البرمجة بلغة C++', desc: 'C++ OOP' }
+                ] 
+            },
             { id: 'd3', name: 'إدارة الأعمال', icon: 'fa-user-tie', courses: [] },
             { id: 'd4', name: 'قسم الاقتصاد', icon: 'fa-globe-africa', courses: [] },
             { id: 'd5', name: 'قسم التمويل', icon: 'fa-coins', courses: [] }
         ];
 
-        // --- منطق التشغيل والتبديل ---
         let currentPlaylistData = [];
         let currentNav = 'home';
 
-        // دالة لإنشاء قائمة دروس افتراضية لأي مادة (للتجربة)
         function generateLessons(subjectName) {
             return [
-                { title: `مقدمة في ${subjectName}`, desc: `شرح تعريفي عن ${subjectName}`, videoId: "" }, // فارغ
+                { title: `مقدمة في ${subjectName}`, desc: `شرح تعريفي عن ${subjectName}`, videoId: "" },
                 { title: `الفصل الأول: ${subjectName}`, desc: "بداية المنهج", videoId: "" },
                 { title: `الفصل الثاني: ${subjectName}`, desc: "تكملة الشرح", videoId: "" },
                 { title: `مراجعة شاملة`, desc: "حل أسئلة وتدريبات", videoId: "" }
@@ -285,14 +320,12 @@
         }
 
         window.onload = () => {
-            // رسم المواد العامة
             document.getElementById('generalGrid').innerHTML = generalSubjects.map(s => `
                 <div class="subject-chip" onclick="openCoursePlayer('${s.title}')">
                     <i class="fas ${s.icon}"></i><div class="subject-name">${s.title}</div>
                 </div>
             `).join('');
 
-            // رسم الأقسام
             document.getElementById('deptGrid').innerHTML = departments.map(d => `
                 <div class="dept-card" onclick="openDept('${d.id}')">
                     <div class="dept-info">
@@ -310,7 +343,7 @@
             switchView('dept');
             document.getElementById('deptTitleDisplay').innerText = dept.name;
             const list = document.getElementById('deptCoursesList');
-            if(dept.courses.length === 0) list.innerHTML = '<p style="color:white">لا توجد كورسات</p>';
+            if(dept.courses.length === 0) list.innerHTML = '<p style="color:white; text-align:center;">لا توجد كورسات</p>';
             else list.innerHTML = dept.courses.map(c => `
                 <div class="dept-card" onclick="openCoursePlayer('${c.title}')">
                     <div class="dept-text"><h3>${c.title}</h3><p>${c.desc}</p></div>
@@ -319,32 +352,18 @@
             `).join('');
         }
 
-        // --- دالة فتح المشغل وتوليد القائمة ---
         function openCoursePlayer(courseTitle) {
             switchView('player');
-            // توليد دروس خاصة بهذا الكورس
             currentPlaylistData = generateLessons(courseTitle);
-            
-            // رسم القائمة
             renderPlaylistUI();
-            
-            // تشغيل أول درس تلقائياً
             playLesson(0);
         }
 
-        // --- دالة تشغيل درس معين (التنقل الفعلي) ---
         function playLesson(index) {
             const lesson = currentPlaylistData[index];
-            
-            // 1. تحديث النصوص
             document.getElementById('lessonTitle').innerText = lesson.title;
             document.getElementById('lessonDesc').innerText = lesson.desc;
-            
-            // 2. تحديث الفيديو (حالياً فارغ حسب طلبك)
-            // إذا أردت وضع رابط، ضعه هنا: `https://www.youtube.com/embed/${lesson.videoId}`
             document.getElementById('mainPlayer').src = ""; 
-
-            // 3. تحديث الستايل في القائمة (Active Class)
             const items = document.querySelectorAll('.playlist-item');
             items.forEach((item, i) => {
                 if (i === index) item.classList.add('active');
@@ -352,7 +371,6 @@
             });
         }
 
-        // رسم واجهة القائمة
         function renderPlaylistUI() {
             const container = document.getElementById('playlistContainer');
             container.innerHTML = currentPlaylistData.map((lesson, index) => `
@@ -366,12 +384,10 @@
             `).join('');
         }
 
-        // دوال مساعدة
         function switchView(name) {
             ['homeView','deptView','playerView','aboutView'].forEach(id => document.getElementById(id).classList.add('hidden'));
             document.getElementById(name+'View').classList.remove('hidden');
             window.scrollTo(0,0);
-            // إظهار بحث الموبايل فقط في الرئيسية
             document.getElementById('mobileSearchBox').style.display = (name === 'home') ? 'block' : 'none';
         }
         function goHome() { switchView('home'); currentNav='home'; }
@@ -382,7 +398,6 @@
             document.getElementById('menuOverlay').classList.toggle('active');
         }
 
-        // البحث (مشترك)
         function setupSearch(inputId, resultsId) {
             const input = document.getElementById(inputId);
             const list = document.getElementById(resultsId);
@@ -390,10 +405,23 @@
                 const val = e.target.value.toLowerCase();
                 list.innerHTML = '';
                 if(val.length < 1) { list.classList.remove('show'); return; }
-                const hits = generalSubjects.filter(s => s.title.includes(val));
-                if(hits.length > 0) {
+                
+                // البحث في المواد العامة
+                const generalHits = generalSubjects.filter(s => s.title.includes(val));
+                
+                // البحث في كورسات الأقسام
+                let deptHits = [];
+                departments.forEach(d => {
+                    d.courses.forEach(c => {
+                        if (c.title.includes(val)) deptHits.push(c);
+                    });
+                });
+
+                const allHits = [...generalHits, ...deptHits];
+
+                if(allHits.length > 0) {
                     list.classList.add('show');
-                    hits.forEach(h => {
+                    allHits.forEach(h => {
                         const div = document.createElement('div');
                         div.className = 'result-item';
                         div.innerText = h.title;
@@ -406,7 +434,6 @@
         }
         setupSearch('mobileSearchInput', 'mobileSearchResults');
         setupSearch('desktopSearchInput', 'desktopSearchResults');
-
     </script>
 </body>
 </html>
