@@ -302,8 +302,22 @@
                     { title: 'البرمجة بلغة C++', desc: 'C++ OOP' }
                 ] 
             },
-            { id: 'd3', name: 'إدارة الأعمال', icon: 'fa-user-tie', courses: [] },
-            { id: 'd4', name: 'قسم الاقتصاد', icon: 'fa-globe-africa', courses: [] },
+            { 
+                id: 'd3', name: 'قسم إدارة الأعمال', icon: 'fa-user-tie', 
+                courses: [
+                    { title: 'إدارة عمليات إنتاجية', desc: 'تخطيط ومراقبة الإنتاج' },
+                    { title: 'مبادئ التسويق', desc: 'المزيج التسويقي وسلوك المستهلك' },
+                    { title: 'علوم سلوكية', desc: 'سلوك الأفراد والجماعات' },
+                    { title: 'إدارة أعمال', desc: 'الوظائف الإدارية والمنشأة' }
+                ] 
+            },
+            { 
+                id: 'd4', name: 'قسم الاقتصاد', icon: 'fa-globe-africa', 
+                courses: [
+                    { title: 'تجارة دولية', desc: 'النظريات التجارية وميزان المدفوعات' },
+                    { title: 'مالية عامة', desc: 'النفقات والإيرادات العامة' }
+                ] 
+            },
             { id: 'd5', name: 'قسم التمويل', icon: 'fa-coins', courses: [] }
         ];
 
@@ -406,10 +420,8 @@
                 list.innerHTML = '';
                 if(val.length < 1) { list.classList.remove('show'); return; }
                 
-                // البحث في المواد العامة
                 const generalHits = generalSubjects.filter(s => s.title.includes(val));
                 
-                // البحث في كورسات الأقسام
                 let deptHits = [];
                 departments.forEach(d => {
                     d.courses.forEach(c => {
