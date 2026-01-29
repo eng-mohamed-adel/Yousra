@@ -9,133 +9,192 @@
     <style>
         /* --- المتغيرات والتنسيقات الأساسية --- */
         :root {
-            --primary-gradient: linear-gradient(135deg, #003366, #2c97de);
-            --secondary-color: #d4af37; /* ذهبي */
-            --glass-bg: rgba(255, 255, 255, 0.85);
-            --glass-border: 1px solid rgba(255, 255, 255, 0.4);
-            --text-dark: #1a252f;
-            --sidebar-glass: rgba(15, 23, 42, 0.95);
-            --header-glass: rgba(0, 51, 102, 0.9);
-            --active-item-glass: rgba(44, 151, 222, 0.4);
+            --primary-color: #003366;
+            --secondary-color: #d4af37;
+            --glass-bg: rgba(255, 255, 255, 0.9);
+            --header-bg: rgba(15, 23, 42, 0.95); /* هيدر داكن */
+            --mobile-menu-bg: #0f172a;
         }
 
-        * { box-sizing: border-box; scroll-behavior: smooth; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body {
             font-family: 'Cairo', sans-serif; margin: 0; padding: 0;
-            color: var(--text-dark); overflow-x: hidden;
+            color: #1a252f; overflow-x: hidden;
             background: #0f2027; min-height: 100vh;
         }
 
-        /* --- الخلفية المتحركة --- */
+        /* الخلفية المتحركة */
         .bg-animation {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2;
-            background: linear-gradient(to bottom right, #0f2027, #203a43, #2c5364); overflow: hidden;
+            background: linear-gradient(to bottom right, #0f2027, #203a43, #2c5364);
         }
-        .bg-orb { position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.5; z-index: -1; }
-        .orb-1 { top: -10%; left: -10%; width: 50vw; height: 50vw; background: rgba(44, 151, 222, 0.6); animation: moveOrb1 25s infinite alternate ease-in-out; }
-        .orb-2 { bottom: -20%; right: -20%; width: 60vw; height: 60vw; background: rgba(0, 51, 102, 0.7); animation: moveOrb2 30s infinite alternate-reverse ease-in-out; }
-        @keyframes moveOrb1 { from { transform: translate(0, 0); } to { transform: translate(20%, 30%); } }
-        @keyframes moveOrb2 { from { transform: translate(0, 0); } to { transform: translate(-30%, -20%); } }
+        .bg-orb { position: absolute; border-radius: 50%; filter: blur(60px); opacity: 0.4; z-index: -1; }
+        .orb-1 { top: -10%; left: -10%; width: 60vw; height: 60vw; background: #2c97de; animation: float 10s infinite alternate; }
+        .orb-2 { bottom: -10%; right: -10%; width: 60vw; height: 60vw; background: #d4af37; animation: float 15s infinite alternate-reverse; }
+        @keyframes float { from { transform: translateY(0); } to { transform: translateY(30px); } }
 
         /* كلاسات مساعدة */
         .hidden { display: none !important; }
-        .container { max-width: 1200px; margin: 0 auto; padding: 20px; position: relative; z-index: 1; }
-        .glass-effect {
-            background: var(--glass-bg); backdrop-filter: blur(12px);
-            border: var(--glass-border); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-        }
-        .btn { cursor: pointer; border: none; outline: none; transition: all 0.3s ease; font-family: 'Cairo', sans-serif; }
-        .section-title {
-            color: white; margin: 40px 0 20px; font-size: 1.5rem; border-right: 5px solid var(--secondary-color);
-            padding-right: 15px; text-shadow: 0 2px 10px rgba(0,0,0,0.5);
-        }
-
-        /* --- الهيدر والبحث --- */
+        .container { max-width: 1200px; margin: 0 auto; padding: 15px; }
+        .btn { cursor: pointer; border: none; outline: none; font-family: 'Cairo'; transition: 0.3s; }
+        
+        /* --- الهيدر (متجاوب ومطور) --- */
         .main-header {
-            background: var(--header-glass); backdrop-filter: blur(15px); color: white;
-            padding: 10px 0; box-shadow: 0 4px 25px rgba(0,0,0,0.25);
-            position: sticky; top: 0; z-index: 100; border-bottom: 1px solid rgba(255,255,255,0.2);
+            background: var(--header-bg); backdrop-filter: blur(10px);
+            color: white; padding: 12px 0; position: sticky; top: 0; z-index: 1000;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3); border-bottom: 1px solid rgba(255,255,255,0.1);
         }
-        .header-content { display: flex; align-items: center; justify-content: space-between; }
-        .brand-area { display: flex; align-items: center; gap: 15px; cursor: pointer; }
-        .uni-logo-img { width: 50px; height: 50px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3)); }
-        .brand-text h1 { margin: 0; font-size: 1.3rem; font-weight: 800; }
-        .brand-text small { display: block; font-size: 0.85rem; color: var(--secondary-color); font-weight: 600; }
+        .header-content { display: flex; align-items: center; justify-content: space-between; padding: 0 20px; }
         
-        .search-container { position: relative; }
-        .search-bar-glass {
-            background: rgba(255,255,255,0.15); border-radius: 30px; padding: 8px 15px;
-            display: flex; align-items: center; gap: 10px; border: 1px solid rgba(255,255,255,0.3); width: 250px;
-        }
-        .search-bar-glass input {
-            background: transparent; border: none; color: white; outline: none;
-            font-family: 'Cairo'; font-size: 0.9rem; width: 100%;
-        }
-        .search-suggestions {
-            position: absolute; top: 110%; left: 0; width: 100%;
-            background: white; border-radius: 12px; padding: 5px 0; list-style: none;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3); display: none; z-index: 200;
-        }
-        .search-suggestions.show { display: block; }
-        .suggestion-item { padding: 10px 15px; color: #333; cursor: pointer; border-bottom: 1px solid #eee; }
-        .suggestion-item:hover { background: #f0f2f5; color: var(--primary-color); }
+        /* 1. الشعار */
+        .brand-area { display: flex; align-items: center; gap: 12px; z-index: 1002; cursor: pointer; }
+        .uni-logo-img { width: 45px; height: 45px; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.5)); }
+        .brand-text h1 { margin: 0; font-size: 1.2rem; font-weight: 800; line-height: 1.1; }
+        .brand-text small { font-size: 0.75rem; color: var(--secondary-color); display: block; margin-top: 2px; }
 
-        /* --- 1. شبكة المواد العامة (General Subjects) --- */
-        .general-grid {
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 15px;
+        /* 2. شريط البحث (الكمبيوتر) - جديد */
+        .desktop-search-wrapper {
+            flex: 1; max-width: 400px; margin: 0 30px; position: relative; display: none; /* مخفي في الموبايل */
         }
+        .header-search-bar {
+            background: rgba(255,255,255,0.1); border-radius: 50px; padding: 8px 20px;
+            display: flex; align-items: center; gap: 10px; border: 1px solid rgba(255,255,255,0.2);
+            transition: 0.3s;
+        }
+        .header-search-bar:focus-within { background: rgba(255,255,255,0.2); border-color: var(--secondary-color); }
+        .header-search-bar input {
+            background: transparent; border: none; color: white; outline: none; width: 100%; font-family: 'Cairo'; font-size: 0.9rem;
+        }
+        .header-search-bar input::placeholder { color: rgba(255,255,255,0.6); }
+
+        /* 3. أزرار الهيدر (Desktop) - الشكل الجديد */
+        .desktop-nav { display: none; gap: 15px; align-items: center; } /* مخفي في الموبايل */
+        
+        .nav-btn {
+            background: rgba(255,255,255,0.05); color: white; text-decoration: none;
+            padding: 8px 20px; border-radius: 30px; font-size: 0.9rem; font-weight: 600;
+            display: flex; align-items: center; gap: 8px; border: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.3s ease; cursor: pointer;
+        }
+        .nav-btn i { color: var(--secondary-color); font-size: 1.1rem; transition: 0.3s; }
+        .nav-btn:hover {
+            background: rgba(255,255,255,0.2); transform: translateY(-2px);
+            border-color: var(--secondary-color);
+        }
+        .nav-btn:hover i { color: white; }
+
+        /* زر القائمة (موبايل) */
+        .mobile-toggle-btn {
+            display: block; background: transparent; color: white; font-size: 1.5rem;
+            padding: 5px; z-index: 1002;
+        }
+
+        /* --- القائمة الجانبية (موبايل) --- */
+        .mobile-menu-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7); z-index: 1001; opacity: 0; pointer-events: none; transition: 0.3s;
+        }
+        .mobile-menu-overlay.active { opacity: 1; pointer-events: auto; }
+        .mobile-sidebar {
+            position: fixed; top: 0; right: -280px; width: 280px; height: 100%;
+            background: var(--mobile-menu-bg); z-index: 1002; transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex; flex-direction: column; padding-top: 80px; box-shadow: -5px 0 20px rgba(0,0,0,0.5);
+        }
+        .mobile-sidebar.active { right: 0; }
+        .mobile-link {
+            padding: 15px 25px; color: white; text-decoration: none; font-size: 1.1rem;
+            border-bottom: 1px solid rgba(255,255,255,0.05); display: flex; align-items: center; gap: 15px;
+        }
+        .mobile-link i { width: 25px; color: var(--secondary-color); text-align: center; }
+
+        /* --- شريط البحث (موبايل فقط) --- */
+        .mobile-search-container { margin: 10px 15px 20px; display: block; }
+        .mobile-search-bar {
+            background: rgba(255,255,255,0.15); border-radius: 25px; padding: 10px 15px;
+            display: flex; align-items: center; gap: 10px; border: 1px solid rgba(255,255,255,0.2);
+            color: white;
+        }
+        .mobile-search-bar input { background: transparent; border: none; color: white; outline: none; width: 100%; font-family: 'Cairo'; }
+
+        /* نتائج البحث (مشتركة) */
+        .search-results {
+            position: absolute; top: 110%; left: 0; width: 100%; background: white;
+            border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); z-index: 200;
+            max-height: 300px; overflow-y: auto; display: none;
+        }
+        .search-results.show { display: block; }
+        .result-item { padding: 12px 15px; color: #333; border-bottom: 1px solid #eee; cursor: pointer; font-size: 0.9rem; }
+        .result-item:hover { background: #f0f2f5; color: var(--primary-color); }
+
+        /* --- باقي التنسيقات (محتوى الصفحة) --- */
+        .section-header {
+            display: flex; align-items: center; gap: 10px; margin: 30px 0 20px;
+            padding-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.2);
+        }
+        .section-header h2 { font-size: 1.4rem; margin: 0; color: white; text-shadow: 0 2px 4px rgba(0,0,0,0.3); }
+        .section-header i { color: var(--secondary-color); font-size: 1.5rem; }
+
+        .general-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
         .subject-chip {
-            background: rgba(255, 255, 255, 0.9); border-radius: 12px; padding: 15px;
-            text-align: center; cursor: pointer; transition: 0.3s; border: 1px solid transparent;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1); display: flex; flex-direction: column; align-items: center; justify-content: center; height: 120px;
+            background: rgba(255,255,255,0.95); border-radius: 16px; padding: 20px 10px;
+            text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center;
+            height: 120px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); cursor: pointer; transition: 0.3s;
         }
-        .subject-chip:hover {
-            transform: translateY(-5px); background: white; border-color: var(--secondary-color);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-        }
-        .subject-icon { font-size: 2rem; color: #003366; margin-bottom: 10px; }
-        .subject-name { font-weight: 700; font-size: 0.9rem; color: #333; line-height: 1.2; }
+        .subject-chip:hover { transform: translateY(-5px); background: white; }
+        .subject-chip i { font-size: 2rem; margin-bottom: 10px; color: var(--primary-color); }
+        .subject-name { font-weight: 700; font-size: 0.9rem; }
 
-        /* --- 2. شبكة الأقسام (Departments) --- */
-        .departments-grid {
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px;
-        }
+        .departments-list { display: flex; flex-direction: column; gap: 15px; }
         .dept-card {
-            background: linear-gradient(145deg, rgba(255,255,255,0.9), rgba(255,255,255,0.7));
-            border-radius: 20px; padding: 30px; text-align: center; cursor: pointer; transition: 0.4s;
-            border: 1px solid rgba(255,255,255,0.5); position: relative; overflow: hidden;
+            background: linear-gradient(135deg, rgba(255,255,255,0.95), rgba(255,255,255,0.85));
+            border-radius: 16px; padding: 20px; display: flex; align-items: center; justify-content: space-between;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1); cursor: pointer; transition: 0.3s;
         }
-        .dept-card::before {
-            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 5px; background: var(--secondary-color);
+        .dept-card:hover { transform: translateX(-5px); }
+        .dept-info { display: flex; align-items: center; gap: 15px; }
+        .dept-icon-box {
+            width: 55px; height: 55px; background: rgba(0, 51, 102, 0.1); border-radius: 14px;
+            display: flex; align-items: center; justify-content: center; font-size: 1.6rem; color: var(--primary-color);
         }
-        .dept-card:hover { transform: scale(1.03); box-shadow: 0 15px 30px rgba(0,0,0,0.2); }
-        .dept-icon { font-size: 3rem; color: var(--secondary-color); margin-bottom: 15px; text-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        .dept-title { font-size: 1.4rem; font-weight: 800; color: #003366; margin: 0; }
+        .dept-text h3 { margin: 0; font-size: 1.15rem; color: #333; }
+        .dept-text p { margin: 4px 0 0; font-size: 0.85rem; color: #666; }
 
-        /* --- 3. قائمة كورسات القسم (داخل القسم) --- */
-        .courses-list-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
-        .course-card-inner {
-            background: white; border-radius: 15px; padding: 20px; cursor: pointer; transition: 0.3s;
-            border-left: 5px solid #003366;
+        /* المشغل وصفحات أخرى */
+        .viewer-container { display: flex; flex-direction: column; gap: 20px; }
+        .video-wrapper { position: relative; padding-bottom: 56.25%; background: black; border-radius: 16px; overflow: hidden; width: 100%; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+        .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+        .lesson-info { background: white; border-radius: 16px; padding: 25px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); }
+        .playlist-wrapper { background: rgba(255,255,255,0.05); border-radius: 16px; padding: 15px; border: 1px solid rgba(255,255,255,0.1); }
+        .playlist-item {
+            background: rgba(255,255,255,0.1); border-radius: 10px; padding: 12px 15px; margin-bottom: 8px;
+            color: white; display: flex; align-items: center; justify-content: space-between; cursor: pointer; transition: 0.2s;
         }
-        .course-card-inner:hover { transform: translateX(-5px); background: #f9f9f9; }
+        .playlist-item:hover { background: rgba(255,255,255,0.2); }
+        .playlist-item.active { background: var(--secondary-color); color: #000; font-weight: bold; }
+        .about-card { background: white; border-radius: 20px; padding: 40px; text-align: center; margin-top: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
 
-        /* --- 4. المشغل (Viewer) --- */
-        .viewer-layout { display: flex; height: calc(100vh - 80px); margin-top: 20px; overflow: hidden; }
-        .viewer-sidebar { width: 350px; background: var(--sidebar-glass); backdrop-filter: blur(15px); color: #fff; display: flex; flex-direction: column; border-radius: 16px; margin-left: 20px; }
-        .sidebar-header { padding: 15px; border-bottom: 1px solid rgba(255,255,255,0.1); }
-        .playlist-container { flex: 1; overflow-y: auto; }
-        .playlist-item { padding: 15px; border-bottom: 1px solid rgba(255,255,255,0.05); cursor: pointer; display: flex; justify-content: space-between; }
-        .playlist-item.active { background: var(--active-item-glass); border-right: 4px solid var(--secondary-color); }
-        
-        .viewer-content { flex: 1; overflow-y: auto; padding: 0 0 20px 20px; }
-        .video-container { position: relative; padding-bottom: 56.25%; background: #000; border-radius: 16px; overflow: hidden; margin-bottom: 20px; }
-        .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+        /* =========================================
+           Media Queries (الاستجابة للشاشات)
+           ========================================= */
+        @media (min-width: 992px) {
+            /* تعديلات الهيدر للكمبيوتر */
+            .mobile-toggle-btn { display: none; } /* إخفاء زر المنيو */
+            .desktop-search-wrapper { display: block; } /* إظهار بحث الهيدر */
+            .desktop-nav { display: flex; } /* إظهار الأزرار */
+            
+            /* إخفاء عناصر الموبايل */
+            .mobile-search-container { display: none; } 
 
-        @media (max-width: 900px) {
-            .viewer-layout { flex-direction: column; height: auto; }
-            .viewer-sidebar { width: 100%; margin: 0 0 20px 0; max-height: 400px; }
-            .viewer-content { padding: 0; }
+            /* الشبكات */
+            .general-grid { grid-template-columns: repeat(6, 1fr); gap: 20px; }
+            .departments-list { display: grid; grid-template-columns: repeat(3, 1fr); gap: 25px; }
+            .dept-card { flex-direction: column; text-align: center; padding: 35px 20px; height: 100%; justify-content: center; }
+            .dept-info { flex-direction: column; }
+            
+            /* المشغل */
+            .viewer-container { flex-direction: row; align-items: flex-start; }
+            .viewer-content { flex: 2; }
+            .playlist-wrapper { flex: 1; height: 500px; overflow-y: auto; position: sticky; top: 100px; }
         }
     </style>
 </head>
@@ -148,308 +207,261 @@
 
     <header class="main-header">
         <div class="container header-content">
+            <button class="mobile-toggle-btn" onclick="toggleMenu()">
+                <i class="fas fa-bars"></i>
+            </button>
+
             <div class="brand-area" onclick="goHome()">
                 <img src="https://cdn-icons-png.flaticon.com/512/2231/2231648.png" alt="شعار" class="uni-logo-img">
                 <div class="brand-text">
                     <h1>كلية المحاسبة غريان</h1>
-                    <small>المنصة التعليمية</small>
+                    <small>المنصة التعليمية الرسمية</small>
                 </div>
             </div>
-            <div class="search-container">
-                <div class="search-bar-glass">
-                    <i class="fas fa-search"></i>
-                    <input type="text" id="searchInput" placeholder="بحث شامل..." autocomplete="off">
+
+            <div class="desktop-search-wrapper">
+                <div class="header-search-bar">
+                    <i class="fas fa-search" style="color: var(--secondary-color);"></i>
+                    <input type="text" id="desktopSearchInput" placeholder="ابحث عن مادة أو كورس..." autocomplete="off">
                 </div>
-                <ul class="search-suggestions" id="suggestionBox"></ul>
+                <ul class="search-results" id="desktopSearchResults"></ul>
+            </div>
+
+            <div class="desktop-nav">
+                <a onclick="goHome()" class="nav-btn">
+                    <i class="fas fa-home"></i> الرئيسية
+                </a>
+                <a onclick="showAbout()" class="nav-btn">
+                    <i class="fas fa-info-circle"></i> عن الكلية
+                </a>
             </div>
         </div>
     </header>
 
-    <div id="homeView" class="container">
-        
-        <h2 class="section-title"><i class="fas fa-book-open"></i> المواد العامة (المتطلبات)</h2>
-        <div class="general-grid" id="generalGrid">
-            </div>
+    <div class="mobile-menu-overlay" id="menuOverlay" onclick="toggleMenu()"></div>
+    <div class="mobile-sidebar" id="mobileSidebar">
+        <a onclick="goHome(); toggleMenu()" class="mobile-link"><i class="fas fa-home"></i> الرئيسية</a>
+        <a onclick="showAbout(); toggleMenu()" class="mobile-link"><i class="fas fa-info-circle"></i> معلومات عن الكلية</a>
+        <a onclick="toggleMenu()" class="mobile-link"><i class="fas fa-envelope"></i> اتصل بنا</a>
+    </div>
 
-        <h2 class="section-title"><i class="fas fa-university"></i> الأقسام التخصصية</h2>
-        <div class="departments-grid" id="departmentsGrid">
+    <div class="container mobile-search-container" id="mobileSearchBox">
+        <div style="position: relative;">
+            <div class="mobile-search-bar">
+                <i class="fas fa-search" style="color: #ccc;"></i>
+                <input type="text" id="mobileSearchInput" placeholder="ابحث عن مادة..." autocomplete="off">
             </div>
+            <ul class="search-results" id="mobileSearchResults"></ul>
+        </div>
+    </div>
+
+    <div id="homeView" class="container">
+        <div class="section-header">
+            <i class="fas fa-book-open"></i>
+            <h2>المواد العامة (المتطلبات)</h2>
+        </div>
+        <div class="general-grid" id="generalGrid"></div>
+
+        <div class="section-header" style="margin-top: 50px;">
+            <i class="fas fa-university"></i>
+            <h2>الأقسام التخصصية</h2>
+        </div>
+        <div class="departments-list" id="deptGrid"></div>
+        <br><br>
     </div>
 
     <div id="deptView" class="container hidden">
-        <button onclick="goHome()" class="btn" style="color: white; margin: 20px 0; font-size: 1.1rem;">
+        <button onclick="goHome()" class="btn" style="color: white; margin-bottom: 20px; background: rgba(255,255,255,0.1); padding: 8px 15px; border-radius: 20px;">
             <i class="fas fa-arrow-right"></i> عودة للرئيسية
         </button>
-        <h2 id="deptTitleDisplay" style="color: white; font-size: 2rem; margin-bottom: 30px;"></h2>
-        <div class="courses-list-grid" id="deptCoursesGrid"></div>
+        <h2 id="deptTitleDisplay" style="color: white; margin-bottom: 25px; text-shadow: 0 2px 5px black;"></h2>
+        <div class="departments-list" id="deptCoursesList"></div>
     </div>
 
     <div id="playerView" class="container hidden">
-        <div class="viewer-layout">
-            <div class="viewer-sidebar">
-                <div class="sidebar-header">
-                    <button onclick="goBackFromPlayer()" class="btn" style="color: #ccc; background: transparent;">
-                        <i class="fas fa-arrow-right"></i> عودة للخلف
-                    </button>
-                    <h3 id="playerCourseTitle" style="margin: 10px 0; color: var(--secondary-color);">اسم المادة</h3>
-                </div>
-                <div class="playlist-container" id="playlistItems"></div>
-            </div>
-
+        <button onclick="goBack()" class="btn" style="color: white; margin-bottom: 15px; display: flex; align-items: center; gap: 5px;">
+            <i class="fas fa-chevron-right"></i> رجوع
+        </button>
+        <div class="viewer-container">
             <div class="viewer-content">
-                <div class="video-container">
-                    <iframe id="mainVideoPlayer" src="" frameborder="0" allowfullscreen></iframe>
+                <div class="video-wrapper">
+                    <iframe id="mainPlayer" src="" frameborder="0" allowfullscreen></iframe>
                 </div>
-                <div class="glass-effect" style="padding: 30px; border-radius: 16px;">
-                    <h2 id="currentLessonTitle" style="color: #003366; margin-top: 0;">عنوان الحلقة</h2>
-                    <p id="currentLessonSummary" style="color: #444; line-height: 1.8;">الوصف...</p>
+                <div class="lesson-info">
+                    <h2 id="lessonTitle" style="color: var(--primary-color);">عنوان الدرس</h2>
+                    <p id="lessonDesc" style="color: #666; margin-top: 10px;">وصف الدرس...</p>
+                    <a href="#" class="btn" style="display:inline-block; margin-top:15px; background: #27ae60; color:white; padding:8px 20px; border-radius:5px; text-decoration:none;">
+                        <i class="fas fa-file-pdf"></i> تحميل PDF
+                    </a>
                 </div>
+            </div>
+            <div class="playlist-wrapper">
+                <h3 style="color: white; margin-top:0; border-right:3px solid var(--secondary-color); padding-right:10px;">قائمة الحلقات</h3>
+                <div id="playlistContainer"></div>
             </div>
         </div>
     </div>
 
+    <div id="aboutView" class="container hidden">
+        <button onclick="goHome()" class="btn" style="color: white; margin-bottom: 15px;"><i class="fas fa-arrow-right"></i> عودة</button>
+        <div class="about-card">
+            <img src="https://cdn-icons-png.flaticon.com/512/2231/2231648.png" width="100">
+            <h1 style="color: var(--primary-color); margin: 15px 0;">كلية المحاسبة غريان</h1>
+            <p style="font-size: 1.1rem; color: #555; max-width: 800px; margin: 0 auto; line-height: 1.8;">
+                نحن ملتزمون بتقديم تعليم محاسبي متميز يجمع بين المعرفة النظرية والتطبيقات العملية، لتخريج كفاءات قادرة على تلبية احتياجات سوق العمل المحلي والدولي.
+            </p>
+        </div>
+    </div>
+
     <script>
-        // ============================================
-        // 1. قاعدة البيانات (Data Structure)
-        // ============================================
-
-        // أ) المواد العامة (18 مادة)
+        // --- البيانات ---
         const generalSubjects = [
-            { id: 'g1', title: "لغة عربية", icon: "fa-language", videos: [{title: "أساسيات النحو", id: "VIDEO_ID", summary: "شرح للمبتدأ والخبر"}] },
-            { id: 'g2', title: "دراسات اسلامية", icon: "fa-quran", videos: [{title: "فقه المعاملات", id: "VIDEO_ID", summary: "مقدمة في الفقه"}] },
-            { id: 'g3', title: "قانون مدني", icon: "fa-balance-scale", videos: [{title: "مصادر الالتزام", id: "VIDEO_ID", summary: "شرح القانون المدني"}] },
-            { id: 'g4', title: "لغة انجليزية 1", icon: "fa-font", videos: [{title: "Grammar Basics", id: "VIDEO_ID", summary: "Verb to be"}] },
-            { id: 'g5', title: "لغة انجليزية 2", icon: "fa-font", videos: [{title: "Advanced Grammar", id: "VIDEO_ID", summary: "Tenses"}] },
-            { id: 'g6', title: "مبادئ اقتصاد 1", icon: "fa-chart-line", videos: [{title: "العرض والطلب", id: "VIDEO_ID", summary: "مقدمة الاقتصاد الجزئي"}] },
-            { id: 'g7', title: "مبادئ اقتصاد 2", icon: "fa-chart-pie", videos: [{title: "الدخل القومي", id: "VIDEO_ID", summary: "مقدمة الاقتصاد الكلي"}] },
-            { id: 'g8', title: "مبادئ ادارة 1", icon: "fa-briefcase", videos: [{title: "وظائف الإدارة", id: "VIDEO_ID", summary: "التخطيط والتنظيم"}] },
-            { id: 'g9', title: "مبادئ ادارة 2", icon: "fa-sitemap", videos: [{title: "السلوك التنظيمي", id: "VIDEO_ID", summary: "القيادة والتحفيز"}] },
-            { id: 'g10', title: "مبادئ محاسبة 1", icon: "fa-calculator", videos: [{title: "معادلة الميزانية", id: "VIDEO_ID", summary: "الأصول والخصوم"}] },
-            { id: 'g11', title: "مبادئ محاسبة 2", icon: "fa-file-invoice-dollar", videos: [{title: "التسويات الجردية", id: "VIDEO_ID", summary: "إهلاك الأصول"}] },
-            { id: 'g12', title: "مبادئ احصاء 1", icon: "fa-sort-numeric-up", videos: [{title: "مقاييس النزعة المركزية", id: "VIDEO_ID", summary: "الوسط والوسيط"}] },
-            { id: 'g13', title: "مبادئ احصاء 2", icon: "fa-chart-bar", videos: [{title: "الاحتمالات", id: "VIDEO_ID", summary: "نظرية الاحتمالات"}] },
-            { id: 'g14', title: "تحليل رياضي 1", icon: "fa-infinity", videos: [{title: "التفاضل", id: "VIDEO_ID", summary: "قواعد الاشتقاق"}] },
-            { id: 'g15', title: "تحليل رياضي 2", icon: "fa-square-root-alt", videos: [{title: "التكامل", id: "VIDEO_ID", summary: "تطبيقات التكامل"}] },
-            { id: 'g16', title: "مبادئ حاسوب", icon: "fa-laptop-code", videos: [{title: "مكونات الحاسوب", id: "VIDEO_ID", summary: "Hardwar & Software"}] },
-            { id: 'g17', title: "مبادئ تمويل", icon: "fa-money-bill-wave", videos: [{title: "القيمة الزمنية للنقود", id: "VIDEO_ID", summary: "الفائدة المركبة"}] },
-            { id: 'g18', title: "مبادئ الاستثمار", icon: "fa-hand-holding-usd", videos: [{title: "المحافظ الاستثمارية", id: "VIDEO_ID", summary: "العائد والمخاطرة"}] }
+            { id: 'g1', title: 'لغة عربية', icon: 'fa-language' },
+            { id: 'g2', title: 'دراسات اسلامية', icon: 'fa-quran' },
+            { id: 'g3', title: 'قانون مدني', icon: 'fa-balance-scale' },
+            { id: 'g4', title: 'لغة انجليزية 1', icon: 'fa-font' },
+            { id: 'g5', title: 'لغة انجليزية 2', icon: 'fa-font' },
+            { id: 'g6', title: 'مبادئ اقتصاد 1', icon: 'fa-chart-line' },
+            { id: 'g7', title: 'مبادئ اقتصاد 2', icon: 'fa-chart-pie' },
+            { id: 'g8', title: 'مبادئ ادارة 1', icon: 'fa-briefcase' },
+            { id: 'g9', title: 'مبادئ ادارة 2', icon: 'fa-sitemap' },
+            { id: 'g10', title: 'مبادئ محاسبة 1', icon: 'fa-calculator' },
+            { id: 'g11', title: 'مبادئ محاسبة 2', icon: 'fa-file-invoice-dollar' },
+            { id: 'g12', title: 'مبادئ احصاء 1', icon: 'fa-sort-numeric-up' },
+            { id: 'g13', title: 'مبادئ احصاء 2', icon: 'fa-chart-bar' },
+            { id: 'g14', title: 'تحليل رياضي 1', icon: 'fa-infinity' },
+            { id: 'g15', title: 'تحليل رياضي 2', icon: 'fa-square-root-alt' },
+            { id: 'g16', title: 'مبادئ حاسوب', icon: 'fa-laptop-code' },
+            { id: 'g17', title: 'مبادئ تمويل', icon: 'fa-money-bill-wave' },
+            { id: 'g18', title: 'مبادئ الاستثمار', icon: 'fa-hand-holding-usd' }
         ];
 
-        // ب) الأقسام والكورسات (5 أقسام)
         const departments = [
-            {
-                id: 'dept_acc', name: 'قسم المحاسبة', icon: 'fa-calculator', 
-                courses: [
-                    { id: 'c_acc1', title: 'محاسبة متوسطة 1', videos: [{title:'المخزون', id:'vid1', summary:'طرق تقييم المخزون'}] },
-                    { id: 'c_acc2', title: 'محاسبة ضريبية', videos: [{title:'ضريبة الدخل', id:'vid2', summary:'وعاء الضريبة'}] }
-                ]
+            { 
+                id: 'd1', name: 'قسم المحاسبة', icon: 'fa-calculator',
+                courses: [{ title: 'محاسبة تكاليف', desc: 'شرح التكاليف المعيارية' }, { title: 'محاسبة شركات', desc: 'تأسيس الشركات' }]
             },
-            {
-                id: 'dept_data', name: 'قسم تحليل بيانات', icon: 'fa-database',
-                courses: [
-                    { id: 'c_da1', title: 'تحليل البيانات بـ Excel', videos: [{title:'Pivot Tables', id:'vid3', summary:'الجداول المحورية'}] },
-                    { id: 'c_da2', title: 'Python for Finance', videos: [{title:'Pandas Library', id:'vid4', summary:'مكتبة بانداس'}] }
-                ]
+            { 
+                id: 'd2', name: 'قسم تحليل بيانات', icon: 'fa-database',
+                courses: [{ title: 'Excel متقدم', desc: 'دوال وتقارير' }]
             },
-            {
-                id: 'dept_admin', name: 'قسم إدارة الأعمال', icon: 'fa-user-tie',
-                courses: [
-                    { id: 'c_adm1', title: 'إدارة الموارد البشرية', videos: [{title:'التوظيف', id:'vid5', summary:'استراتيجيات التوظيف'}] }
-                ]
-            },
-            {
-                id: 'dept_eco', name: 'قسم الاقتصاد', icon: 'fa-globe-africa',
-                courses: [
-                    { id: 'c_eco1', title: 'اقتصاد دولي', videos: [{title:'التجارة الخارجية', id:'vid6', summary:'النظريات التجارية'}] }
-                ]
-            },
-            {
-                id: 'dept_fin', name: 'قسم التمويل', icon: 'fa-coins',
-                courses: [
-                    { id: 'c_fin1', title: 'أسواق مالية', videos: [{title:'البورصة', id:'vid7', summary:'آلية عمل البورصة'}] }
-                ]
-            }
+            { id: 'd3', name: 'إدارة الأعمال', icon: 'fa-user-tie', courses: [] },
+            { id: 'd4', name: 'قسم الاقتصاد', icon: 'fa-globe-africa', courses: [] },
+            { id: 'd5', name: 'قسم التمويل', icon: 'fa-coins', courses: [] }
         ];
 
-        // ============================================
-        // 2. دوال العرض والتحكم
-        // ============================================
+        const demoVideos = [
+            { title: "الحلقة 1: مقدمة", id: "VIDEO_ID_1" },
+            { title: "الحلقة 2: الشرح النظري", id: "VIDEO_ID_2" },
+            { title: "الحلقة 3: أمثلة عملية", id: "VIDEO_ID_3" }
+        ];
 
-        const views = {
-            home: document.getElementById('homeView'),
-            dept: document.getElementById('deptView'),
-            player: document.getElementById('playerView')
-        };
+        // --- المنطق ---
+        const views = { home: document.getElementById('homeView'), dept: document.getElementById('deptView'), player: document.getElementById('playerView'), about: document.getElementById('aboutView') };
+        let navHistory = 'home';
 
-        // مسار التنقل للعودة للخلف بشكل صحيح
-        let navigationHistory = 'home'; // 'home' or 'dept'
+        window.onload = () => { renderGeneral(); renderDepts(); };
 
-        window.onload = function() {
-            renderGeneralSubjects();
-            renderDepartments();
-        };
-
-        // رسم المواد العامة
-        function renderGeneralSubjects() {
-            const grid = document.getElementById('generalGrid');
-            grid.innerHTML = generalSubjects.map(sub => `
-                <div class="subject-chip" onclick="openPlayer('${sub.id}', 'general')">
-                    <i class="fas ${sub.icon} subject-icon"></i>
+        function renderGeneral() {
+            document.getElementById('generalGrid').innerHTML = generalSubjects.map(sub => `
+                <div class="subject-chip" onclick="openPlayer('${sub.title}')">
+                    <i class="fas ${sub.icon}"></i>
                     <div class="subject-name">${sub.title}</div>
                 </div>
             `).join('');
         }
 
-        // رسم كروت الأقسام
-        function renderDepartments() {
-            const grid = document.getElementById('departmentsGrid');
-            grid.innerHTML = departments.map(dept => `
-                <div class="dept-card" onclick="openDepartment('${dept.id}')">
-                    <i class="fas ${dept.icon} dept-icon"></i>
-                    <h3 class="dept-title">${dept.name}</h3>
-                    <p style="color:#666; margin-top:10px;">${dept.courses.length} كورسات متاحة</p>
+        function renderDepts() {
+            document.getElementById('deptGrid').innerHTML = departments.map(dept => `
+                <div class="dept-card" onclick="openDept('${dept.id}')">
+                    <div class="dept-info">
+                        <div class="dept-icon-box"><i class="fas ${dept.icon}"></i></div>
+                        <div class="dept-text"><h3>${dept.name}</h3><p>${dept.courses.length} كورسات</p></div>
+                    </div>
+                    <i class="fas fa-chevron-left" style="color:#ccc; font-size:0.9rem;"></i>
                 </div>
             `).join('');
         }
 
-        // فتح صفحة القسم (عرض الكورسات)
-        let currentDeptId = null;
-        function openDepartment(deptId) {
-            currentDeptId = deptId;
-            const dept = departments.find(d => d.id === deptId);
+        function openDept(id) {
+            const dept = departments.find(d => d.id === id);
             if(!dept) return;
-
-            // إظهار واجهة القسم
+            navHistory = 'dept';
             switchView('dept');
-            document.getElementById('deptTitleDisplay').innerHTML = `<i class="fas ${dept.icon}"></i> ${dept.name}`;
-            
-            // رسم كورسات القسم
-            const grid = document.getElementById('deptCoursesGrid');
-            grid.innerHTML = dept.courses.map(course => `
-                <div class="course-card-inner" onclick="openPlayer('${course.id}', 'dept')">
-                    <h3 style="color:#003366; margin:0 0 10px;">${course.title}</h3>
-                    <p style="color:#777; font-size:0.9rem;">اضغط للمشاهدة</p>
+            document.getElementById('deptTitleDisplay').innerText = dept.name;
+            const list = document.getElementById('deptCoursesList');
+            if(dept.courses.length === 0) list.innerHTML = '<p style="color:white; text-align:center;">قريباً...</p>';
+            else list.innerHTML = dept.courses.map(c => `
+                <div class="dept-card" onclick="openPlayer('${c.title}')">
+                    <div class="dept-text"><h3>${c.title}</h3><p>${c.desc}</p></div>
+                    <i class="fas fa-play-circle" style="color: var(--secondary-color); font-size: 1.5rem;"></i>
                 </div>
             `).join('');
         }
 
-        // فتح المشغل (سواء لمادة عامة أو كورس تخصص)
-        let currentObject = null; // الكائن الحالي (مادة أو كورس)
-        function openPlayer(id, type) {
-            let data = null;
-
-            if (type === 'general') {
-                data = generalSubjects.find(s => s.id === id);
-                navigationHistory = 'home'; // العودة للرئيسية
-            } else {
-                // البحث داخل الأقسام
-                departments.forEach(d => {
-                    const c = d.courses.find(c => c.id === id);
-                    if(c) data = c;
-                });
-                navigationHistory = 'dept'; // العودة للقسم
-            }
-
-            if(!data) return;
-            currentObject = data;
-
+        function openPlayer(title) {
             switchView('player');
-            document.getElementById('playerCourseTitle').innerText = data.title;
-            renderPlaylist(data.videos);
-            loadVideo(data.videos[0]);
-        }
-
-        function renderPlaylist(videos) {
-            const list = document.getElementById('playlistItems');
-            list.innerHTML = videos.map((vid, idx) => `
-                <div class="playlist-item" onclick="loadVideoAtIndex(${idx})">
-                    <span>${idx+1}. ${vid.title}</span>
-                    <i class="far fa-play-circle"></i>
+            document.getElementById('lessonTitle').innerText = title;
+            document.getElementById('lessonDesc').innerText = "شرح كامل لمادة " + title;
+            document.getElementById('playlistContainer').innerHTML = demoVideos.map((v, i) => `
+                <div class="playlist-item ${i===0?'active':''}" onclick="changeVideo(this)">
+                    <span>${v.title}</span><i class="far fa-play-circle"></i>
                 </div>
             `).join('');
+            document.getElementById('mainPlayer').src = "https://www.youtube.com/embed/dQw4w9WgXcQ?rel=0";
         }
 
-        function loadVideoAtIndex(idx) {
-            loadVideo(currentObject.videos[idx]);
+        function changeVideo(el) {
+            document.querySelectorAll('.playlist-item').forEach(e => e.classList.remove('active'));
+            el.classList.add('active');
         }
 
-        function loadVideo(video) {
-            document.getElementById('mainVideoPlayer').src = `https://www.youtube.com/embed/${video.id}?rel=0`; // ضع رابط فيديو حقيقي هنا
-            document.getElementById('currentLessonTitle').innerText = video.title;
-            document.getElementById('currentLessonSummary').innerText = video.summary;
-        }
-
-        // التنقل بين الواجهات
-        function switchView(viewName) {
+        function switchView(name) {
             Object.values(views).forEach(el => el.classList.add('hidden'));
-            views[viewName].classList.remove('hidden');
-            window.scrollTo(0, 0);
+            views[name].classList.remove('hidden');
+            window.scrollTo(0,0);
+            document.getElementById('mobileSearchBox').style.display = (name === 'home') ? 'block' : 'none';
         }
 
-        function goHome() {
-            document.getElementById('mainVideoPlayer').src = "";
-            switchView('home');
+        function goHome() { switchView('home'); navHistory='home'; }
+        function showAbout() { switchView('about'); navHistory='home'; }
+        function goBack() { (navHistory === 'dept') ? switchView('dept') : goHome(); }
+        function toggleMenu() {
+            document.getElementById('mobileSidebar').classList.toggle('active');
+            document.getElementById('menuOverlay').classList.toggle('active');
         }
 
-        function goBackFromPlayer() {
-            document.getElementById('mainVideoPlayer').src = "";
-            if (navigationHistory === 'dept' && currentDeptId) {
-                switchView('dept');
-            } else {
-                switchView('home');
-            }
-        }
-
-        // --- البحث الشامل ---
-        const searchInput = document.getElementById('searchInput');
-        const suggestionBox = document.getElementById('suggestionBox');
-
-        searchInput.addEventListener('input', function() {
-            const query = this.value.toLowerCase();
-            suggestionBox.innerHTML = '';
+        // --- البحث الموحد (للموبايل والكمبيوتر) ---
+        function setupSearch(inputId, resultsId) {
+            const input = document.getElementById(inputId);
+            const list = document.getElementById(resultsId);
             
-            if (query.length < 1) {
-                suggestionBox.classList.remove('show');
-                return;
-            }
-
-            // البحث في المواد العامة
-            const genMatches = generalSubjects.filter(s => s.title.includes(query));
-            // البحث في كورسات الأقسام
-            let deptMatches = [];
-            departments.forEach(d => {
-                d.courses.forEach(c => {
-                    if(c.title.includes(query)) deptMatches.push(c);
-                });
+            input.addEventListener('input', (e) => {
+                const val = e.target.value.toLowerCase();
+                list.innerHTML = '';
+                if(val.length < 1) { list.classList.remove('show'); return; }
+                
+                const hits = generalSubjects.filter(s => s.title.includes(val));
+                if(hits.length > 0) {
+                    list.classList.add('show');
+                    hits.forEach(h => {
+                        const li = document.createElement('div');
+                        li.className = 'result-item';
+                        li.innerText = h.title;
+                        li.onclick = () => { openPlayer(h.title); list.classList.remove('show'); input.value=''; };
+                        list.appendChild(li);
+                    });
+                } else { list.classList.remove('show'); }
             });
+            
+            // إخفاء النتائج عند الضغط خارجها
+            document.addEventListener('click', (e) => {
+                if(e.target !== input) list.classList.remove('show');
+            });
+        }
 
-            const allMatches = [...genMatches, ...deptMatches];
-
-            if (allMatches.length > 0) {
-                suggestionBox.classList.add('show');
-                allMatches.forEach(match => {
-                    const li = document.createElement('li');
-                    li.className = 'suggestion-item';
-                    li.innerText = match.title;
-                    li.onclick = () => {
-                        // تحديد هل هو عام أم خاص لفتح المشغل
-                        const isGeneral = generalSubjects.some(g => g.id === match.id);
-                        openPlayer(match.id, isGeneral ? 'general' : 'dept');
-                        suggestionBox.classList.remove('show');
-                        searchInput.value = '';
-                    };
-                    suggestionBox.appendChild(li);
-                });
-            } else {
-                suggestionBox.classList.remove('show');
-            }
-        });
-
-        document.addEventListener('click', (e) => {
-            if (!e.target.closest('.search-container')) {
-                suggestionBox.classList.remove('show');
-            }
-        });
+        setupSearch('mobileSearchInput', 'mobileSearchResults');
+        setupSearch('desktopSearchInput', 'desktopSearchResults');
 
     </script>
 </body>
